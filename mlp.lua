@@ -124,7 +124,7 @@ function MLP:new( config )
         -- Código para quando a inicialização for Zeros
 
     elseif config.initialization == Initialization.Manual then
-        obj.importParameters( config.parameters! );
+        obj.importParameters( config.parameters );
 
     elseif config.initialization == Initialization.Dev then
         -- Aqui fica por conta do programador definir os parametros antes de tentar usar o modelo
@@ -136,13 +136,4 @@ function MLP:new( config )
     return obj
 end
 
--- Usar a classe
-local config = {
-    layers = {
-        { units = 3, activation_functions = {"relu", "sigmoid"} },
-        { units = 2, activation_functions = {"sigmoid", "softmax"} }
-    },
-    initialization = Initialization.Random 
-}
-
-local mlp = MLP:new(config)
+return MLP;
