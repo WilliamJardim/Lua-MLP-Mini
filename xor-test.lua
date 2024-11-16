@@ -1,6 +1,7 @@
 local DefaultValues = require('utils/DefaultValues');
 local Initialization = DefaultValues.Initialization;
 local LayerType      = DefaultValues.LayerType;
+local ioWriteArray   = require('utils/ioWriteArray');
 local MLP = require('mlp');
 
 -- Usar a classe
@@ -40,7 +41,8 @@ mlp.train(inputs, targets, 0.1, 10000);
 io.write('Estimativas:\n');
 for i = 1, #inputs do
     local input = inputs[i];
+
     local output = mlp:estimate(input);
     
-    io.write(string.format("Entrada: %s, Estimativa: %s\n", table.concat(input, ", "), output));
+    io.write(string.format("Entrada: %s, Estimativa: %s\n", table.concat(input, ", "), ioWriteArray(output) ));
 end

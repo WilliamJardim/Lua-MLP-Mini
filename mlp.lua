@@ -188,7 +188,43 @@ function MLP:new( config )
         Forward pass (passagem direta)
     ]]--
     function obj:forward(input)
+        if input == nil or #input == 0 then
+            error("input inválido para a passagem direta")
+        end
 
+        local activations = input;
+
+        --Passar pelos neurônios de cada camada
+        obj.layerActivations = {activations}; -- Para armazenar as ativações de cada camada
+
+        for l = 1, #obj.weights
+        do
+            local nextActivations = {};
+
+            for j = 1, #obj.weights[l]
+            do
+
+                local weightedSum = 0;
+
+                for k = 1, #activations
+                do
+                    weightedSum = weightedSum + activations[k] * obj.weights[l][j][k];
+                end
+
+                weightedSum = weightedSum + obj.biases[l][j];
+
+                -- Verifica se a unidade tem uma função especificada, ou se vai usar uma função padrão
+                local unidadeTemFuncao = (#obj.layers_functions > 0 and obj.layers_functions[l] and obj.layers_functions[l][j]) and true or false;
+                local nomeDaFuncao = (unidadeTemFuncao == true) and obj.layers_functions[l][j] or 'Sigmoid';
+
+                table.insert(nextActivations, ActivationFunctions[ nomeDaFuncao ]( weightedSum ) )
+            end
+
+            activations = nextActivations;
+            table.insert(obj.layerActivations, activations);
+        end
+
+        return activations;
     end
 
     --[[
@@ -205,7 +241,11 @@ function MLP:new( config )
     end
 
     function obj:estimate(inputs)
-        return obj.forward(inputs);
+        if inputs == nil or #inputs == 0 then
+            error("inputs inválido para a passagem direta")
+        end
+
+        return obj:forward(inputs);
     end
 
     if config.initialization == Initialization.Random then
