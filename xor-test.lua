@@ -34,6 +34,21 @@ local targets = {
 
 mlp:logParameters();
 
+-- Calculando as estimativas para os dados de entrada
+local estimatedValues = {}
+
+for i = 1, #inputs do
+    local input = inputs[i];
+
+    local output = mlp:estimate(input);
+    
+    io.write(string.format("Entrada: %s, Estimativa: %s\n", table.concat(input, ", "), ioWriteArray(output) ));
+
+    table.insert(estimatedValues, output);
+end
+
+io.write( 'Erro inicial(ANTES DO TREINAMENTO): ', mlp:compute_train_cost( inputs, targets, estimatedValues ) );
+
 --Treinando a rede
 mlp:train(inputs, targets, 0.1, 10000, 1);
 
@@ -53,5 +68,5 @@ for i = 1, #inputs do
     table.insert(estimatedValues, output);
 end
 
-io.write( 'Erro inicial(ANTES DO TREINAMENTO): ', mlp:compute_train_cost( inputs, targets, estimatedValues ) );
+io.write( 'ERRO FINAL: ', mlp:compute_train_cost( inputs, targets, estimatedValues ) );
 
