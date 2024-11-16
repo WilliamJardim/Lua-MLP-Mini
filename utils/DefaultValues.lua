@@ -4,5 +4,11 @@ return {
         Manual = 'Manual',
         Random = 'Random',
         Dev = 'Dev'
+    },
+
+    LayerType = {
+        Input = 'Input',
+        Hidden = 'Hidden',
+        Final = 'Final'
     }
 }

@@ -1,12 +1,14 @@
 local DefaultValues = require('utils/DefaultValues');
 local Initialization = DefaultValues.Initialization;
+local LayerType      = DefaultValues.LayerType;
 local MLP = require('mlp');
 
 -- Usar a classe
 local config = {
     layers = {
-        { units = 3, activation_functions = {"relu", "sigmoid"} },
-        { units = 2, activation_functions = {"sigmoid", "softmax"} }
+        { type = LayerType.Input,  inputs = 2, units = 2 },
+        { type = LayerType.Hidden, inputs = 2, units = 2, activation_functions = {"sigmoid", "sigmoid"} },
+        { type = LayerType.Final,  inputs = 2, units = 1, activation_functions = {"sigmoid"} }
     },
     initialization = Initialization.Random 
 }

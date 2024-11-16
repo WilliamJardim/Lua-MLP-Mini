@@ -6,6 +6,7 @@ local ValidateLayerFunctions = require('validators/ValidateLayerFunctions');
 local ValidateStructure = require('validators/ValidateStructure');
 local DefaultValues = require('utils/DefaultValues');
 local Initialization = DefaultValues.Initialization;
+local LayerType      = DefaultValues.LayerType;
 local createFilledArray = require('utils/createFilledArray');
 local deepCopy = require('utils/deepCopy');
 local saveToFile = require('utils/saveToFile');
