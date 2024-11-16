@@ -67,8 +67,22 @@ function MLP:new( config )
         @param {Array} train_samples - Todas as amostras de treinamento
         @returns {Number} - o custo
     ]]--
-    function obj:compute_train_cost()
+    function obj:compute_train_cost( inputs, mytargets, estimatedValues )
+        local cost = 0;
         
+        for i = 1, #inputs
+        do
+            local targets      = mytargets[i];
+            local estimations  = estimatedValues[i];
+
+            for S = 1, #estimations
+            do
+                local diferenca = estimations[S] - targets[S]
+                cost = cost + (diferenca * diferenca) -- Substituí math.pow(diferenca, 2) por diferenca * diferenca
+            end
+        end
+
+        return cost;
     end
 
     --[[

@@ -39,10 +39,18 @@ mlp.train(inputs, targets, 0.1, 10000);
 
 --Testando a rede
 io.write('Estimativas:\n');
+
+-- Calculando as estimativas para os dados de entrada
+local estimatedValues = {}
+
 for i = 1, #inputs do
     local input = inputs[i];
 
     local output = mlp:estimate(input);
     
     io.write(string.format("Entrada: %s, Estimativa: %s\n", table.concat(input, ", "), ioWriteArray(output) ));
+
+    table.insert(estimatedValues, output);
 end
+
+io.write( 'Erro inicial(ANTES DO TREINAMENTO): ', mlp:compute_train_cost( inputs, targets, estimatedValues ) );
