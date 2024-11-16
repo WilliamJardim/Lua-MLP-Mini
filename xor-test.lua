@@ -32,10 +32,10 @@ local targets = {
     {0}
 };
 
-mlp.logParameters();
+mlp:logParameters();
 
 --Treinando a rede
-mlp.train(inputs, targets, 0.1, 10000);
+mlp:train(inputs, targets, 0.1, 10000, 1);
 
 --Testando a rede
 io.write('Estimativas:\n');
@@ -54,3 +54,4 @@ for i = 1, #inputs do
 end
 
 io.write( 'Erro inicial(ANTES DO TREINAMENTO): ', mlp:compute_train_cost( inputs, targets, estimatedValues ) );
+

@@ -251,6 +251,93 @@ function MLP:new( config )
         epochs,
         printEpochs 
     )
+        --Garante que os parametros iniciais sejam arquivados ANTES DO TREINAMENTO COMEÇAR
+        obj.initialParameters = obj:exportParameters();
+
+        --Valida os dados de treinamento
+        ValidateDataset( obj.config, 
+                         inputs, 
+                         targets );
+        
+        for epoch = 0, epochs
+        do
+            for i = 1, #inputs
+            do
+                local inputAtual = inputs[i]; 
+                local target     = targets[i];
+
+                -- Passagem direta
+                local output = obj:forward(inputAtual);
+
+                -- Cálculo do erro da saída
+                local outputError = {};
+                for j = 1, #output
+                do
+                    local error = target[j] - output[j];
+                    table.insert(outputError, error);
+                end
+
+                -- Backpropagation (retropropagação)
+                local layerErrors = {outputError};
+
+                -- Cálculo dos erros das camadas ocultas, começando da última camada
+                for l = #self.weights, 2, -1 do
+                    local layerError = {}
+
+                    for j = 1, #self.weights[l - 1] do
+                        local error = 0
+                        for k = 1, #self.weights[l] do
+                            error = error + layerErrors[1][k] * self.weights[l][k][j]
+                        end
+
+                        -- Verifica se a unidade tem uma função especificada ou usa uma função padrão
+                        local unidadeTemFuncao = (self.layers_functions and self.layers_functions[l] and self.layers_functions[l][j]) ~= nil
+                        local nomeDaFuncao = unidadeTemFuncao and self.layers_functions[l][j] or "Sigmoid"
+
+                        -- Aplica a derivada da função de ativação
+                        table.insert(
+                            layerError,
+                            error * ActivationFunctions[nomeDaFuncao .. "Derivative"](self.layerActivations[l][j])
+                        )
+                    end
+
+                    -- Adiciona os erros da camada oculta atual como o primeiro elemento da tabela
+                    table.insert(layerErrors, 1, layerError)
+                end
+
+                -- Atualização dos pesos e biases
+                for l = #self.weights, 1, -1 do
+                    for j = 1, #self.weights[l] do
+                        for k = 1, #self.weights[l][j] do
+                            -- Atualiza os pesos usando a retropropagação
+                            self.weights[l][j][k] = self.weights[l][j][k] + learningRate * layerErrors[l][j] * self.layerActivations[l][k]
+                        end
+            
+                        -- Atualiza os biases
+                        self.biases[l][j] = self.biases[l][j] + learningRate * layerErrors[l][j]
+                    end
+                end
+            end
+
+            -- Calculando as estimativas para os dados de entrada APÒS ESSA EPOCA
+            local estimatedValuesAfterEpoch = {}
+
+            for i = 1, #inputs do
+                local input = inputs[i];
+
+                local output = obj:estimate(input);
+
+                table.insert(estimatedValuesAfterEpoch, output);
+            end
+
+            local totalError = obj:compute_train_cost( inputs, targets, estimatedValuesAfterEpoch );
+
+            -- Log do erro para monitoramento
+            if epoch % printEpochs == 0 then
+                print("Época " .. epoch .. " teve erro " .. totalError)
+            end
+
+        end
 
     end
 
