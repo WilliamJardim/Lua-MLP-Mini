@@ -91,6 +91,9 @@ end
     ├ëpoca 10000 teve erro 3.0876729421038e-05
 
     EM TODA EXECUCAÇÂO SEMPRE DÀ ESSE MESMO RESULTADOS
+
+    TESTE:
+    https://github.com/WilliamJardim/MLP-mini/blob/main/tests/XOR_INTEGRY_TEST_15_10_verifed/script.js
 ]]--
 
 --[[**
